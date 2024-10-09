@@ -18,13 +18,11 @@ namespace Decanat
             Console.WriteLine("3. Показать список студентов");
             Console.WriteLine("4. Вывести гистограмму: распределение студентов по специальностям");
 
-
             while (true)
             {
                 try
                 {
                     int number = Convert.ToInt32(Console.ReadLine());
-
                     switch (number)
                     {
                         case 1:
@@ -46,67 +44,47 @@ namespace Decanat
                 }
                 catch
                 {
-                    Console.WriteLine("Некорректный ввод\n");
+                    Console.WriteLine("Некорректный ввод");
                 }
             }
         }
 
-        private static int ParseInt(string number)
-        {
-            int cur = 0;
-            try
-            {
-                cur = Convert.ToInt32(number);
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            return cur;
-        }
         private static void SortStudents(Logic logic)
         {
             foreach (var item in logic.DistributionStudents())
             {
-                Console.WriteLine($"{item.Key} {item.Value}");
+                var str = new string('=', item.Value);
+                Console.WriteLine($"{item.Key} {str}");
             }
             Console.WriteLine();
         }
 
         private static void OutputStudents(Logic logic)
         {
-            for (int i = 0; i < logic.GetListStudents().Count; i++)
+            List<string[]> students = logic.GetListStudents();
+            for (int i = 0; i < students.Count; i++)
             {
-                foreach (string s in logic.GetListStudents()[i])
-                {
-                    Console.WriteLine(s);
-                }
-                Console.WriteLine();
+                Console.WriteLine($"Студент: {students[i][1]}, Специальность: {students[i][2]}, Группа: {students[i][3]}");
             }
+            Console.WriteLine();
         }
 
         private static void RemoveStudent(Logic logic)
         {
-
-            int index = 1;
-            Console.WriteLine("Выберете номер студента, которого хотите удалить");
+            Console.WriteLine("Выберете ID студента, которого хотите удалить");
             for (int i = 0; i < logic.GetListStudents().Count; i++)
             {
-                Console.WriteLine(index + ":");
-                foreach (string s in logic.GetListStudents()[i])
-                {
+                foreach (var s in logic.GetListStudents()[i])
                     Console.WriteLine(s);
-                }
                 Console.WriteLine();
-                index++;
             }
             int indexOfChange = int.Parse(Console.ReadLine());
-            if (indexOfChange - 1 >= 0 && indexOfChange - 1 < logic.GetListStudents().Count)
+            try
             {
-                logic.RemoveStudent(indexOfChange - 1);
+                logic.RemoveStudent(indexOfChange);
                 Console.WriteLine("Студент удален\n");
             }
-            else
+            catch 
             {
                 Console.WriteLine("Студент не удален\n");
             }

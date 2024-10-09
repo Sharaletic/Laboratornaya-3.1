@@ -5,51 +5,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Model;
+using DataAccess;
 
 namespace BusinessLogic
 {
     public class Logic
     {
-        private List<Student> students = new List<Student>();
+        IRepository<Student> repository = new EntityProjectRepository();
+        //IRepository<Student> repository = new DapperProjectRepository();
 
         public void AddStudent(string name, string speciallity, string group)
         {
-            if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(speciallity) && !string.IsNullOrEmpty(group))
-            {
-                Student student = new Student { Name = name, Speciality = speciallity, Group = group };
-                students.Add(student);
-            }
+            repository.Create(new Student { Name = name, Speciality = speciallity, Group = group });
         }
 
-        public void RemoveStudent(int index)
+        public void RemoveStudent(int id)
         {
-            students.Remove(students[index]);
-        }
-
-        public Logic()
-        {
-            students.Add(new Student { Name = "Алексей Иванов", Speciality = "Программирование", Group = "КИ21-15" });
-            students.Add(new Student { Name = "Людмила Леонова", Speciality = "Архитектура", Group = "КИ20-19" });
+            repository.Delete(repository.ReadById(id));
         }
 
         public List<string[]> GetListStudents()
         {
-            List<string[]> listOfStudents = new List<string[]>();
+            List<string[]> listOfStudents1 = new List<string[]>();
+            List<Student> students = repository.ReadAll().ToList();
             for (int i = 0; i < students.Count; i++)
             {
-                string[] array = new string[] { students[i].Name, students[i].Speciality, students[i].Group };
-                listOfStudents.Add(array);
+                listOfStudents1.Add(new string[] { students[i].Id.ToString(), students[i].Name, students[i].Speciality, students[i].Group });
             }
-            return listOfStudents;
+            return listOfStudents1;
         }
 
         public Dictionary<string, int> DistributionStudents()
         {
-            var sortStudents = (from student in students
+            var sortStudents = (from student in repository.ReadAll()
                                 group student by student.Speciality into g
                                 select g).ToDictionary(g => g.Key, g => g.Count());
-
-
             return sortStudents;
         }
     }

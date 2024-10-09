@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml.Linq;
 using BusinessLogic;
 
@@ -26,9 +27,9 @@ namespace Laboratornaya_3._1
             if (!string.IsNullOrEmpty(textBox1.Text.ToString()) && !string.IsNullOrEmpty(textBox2.Text.ToString()) && !string.IsNullOrEmpty(textBox3.Text.ToString()))
             {
                 string[] row = { textBox1.Text, textBox2.Text, textBox3.Text };
-                var listItem = new ListViewItem(row);
-                form1.listView1.Items.Add(listItem);
                 form1.logic.AddStudent(textBox1.Text, textBox2.Text, textBox3.Text);
+                form1.listView1.Items.Add(new ListViewItem(form1.logic.GetListStudents().Last()));
+                form1.Chart();
             }
             else
             {

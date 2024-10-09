@@ -20,9 +20,9 @@ namespace Laboratornaya_3._1
 
             for (int i = 0; i < logic.GetListStudents().Count; i++)
             {
-                var listItem = new ListViewItem(logic.GetListStudents()[i]);
-                listView1.Items.Add(listItem);
+                listView1.Items.Add(new ListViewItem(logic.GetListStudents()[i]));
             }
+            Chart();
         }
 
         public Logic logic = new Logic();
@@ -38,8 +38,9 @@ namespace Laboratornaya_3._1
         {
             if (listView1.SelectedItems.Count != 0)
             {
-                logic.RemoveStudent(listView1.FocusedItem.Index);
+                logic.RemoveStudent(int.Parse(listView1.SelectedItems[0].Text));
                 listView1.Items.Remove(listView1.SelectedItems[0]);
+                Chart();
             }
             else
             {
@@ -47,7 +48,7 @@ namespace Laboratornaya_3._1
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        public void Chart()
         {
             chart1.Series[0].Points.Clear();
             foreach (var s in logic.DistributionStudents())
